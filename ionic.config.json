@@ -1,5 +1,7 @@
 {
   "name": "locationandcamera",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
