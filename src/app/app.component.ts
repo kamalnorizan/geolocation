@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { FCM } from '@ionic-native/fcm/ngx';
 import { Router } from '@angular/router';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,8 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private fcm: FCM,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     this.initializeApp();
   }
@@ -27,23 +29,31 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
-      this.fcm.subscribeToTopic('news');
+      // this.fcm.subscribeToTopic('news');
 
-      //recieve token
-      if (this.platform.is('android') ) {
-        this.fcm.getToken().then(
-          token => {
-            console.log(token);
-            alert(token);
-          }
-        );
-      } else if (this.platform.is('ios')) {
-        this.fcm.getAPNSToken().then(
-          token => {
-            console.log(token);
-          }
-        );
-      }
+      // //recieve token
+      // if (this.platform.is('ios')) {
+      //   this.fcm.getAPNSToken().then(
+      //     token => {
+      //       console.log(token);
+      //     }
+      //   );
+      // } else {
+      //   this.fcm.getToken().then(
+      //     token => {
+      //       this.authService.storefcm(token).subscribe(
+      //         data => {
+      //           alert('done');
+      //         },
+      //         error => {
+      //           console.log(error);
+      //         }
+      //       );
+      //       console.log(token);
+      //       // alert(token);
+      //     }
+      //   );
+      // }
     });
 
     this.fcm.onNotification().subscribe(

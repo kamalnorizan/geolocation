@@ -1,15 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { FCM } from '@ionic-native/fcm/ngx';
+import { Platform } from '@ionic/angular';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit{
 
   constructor(
-    private geolocation: Geolocation
+    private geolocation: Geolocation,
+    private fcm: FCM,
+    private platform: Platform,
+    private authService: AuthService
   ) { }
   longitud: any;
   latitude: any;
@@ -27,6 +33,35 @@ export class HomePage {
         }
       }
     );
+  }
+
+  ngOnInit(){
+    this.fcm.subscribeToTopic('news');
+
+    //recieve token
+    if (this.platform.is('ios')) {
+      this.fcm.getAPNSToken().then(
+        token => {
+          console.log(token);
+        }
+      );
+    } else {
+      this.fcm.getToken().then(
+        token => {
+          alert(token);
+          this.authService.storefcm(token).subscribe(
+            data => {
+              alert(data['msg']);
+            },
+            error => {
+              alert(error);
+            }
+          );
+          console.log(token);
+          // alert(token);
+        }
+      );
+    }
   }
 
   toRadius(value) {
@@ -48,7 +83,5 @@ export class HomePage {
 
     return dist;
   }
-  test() {
-    alert('done');
-  }
+
 }
